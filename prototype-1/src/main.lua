@@ -4,9 +4,10 @@ end
 
 function _update()
   player:control()
+  player:animate()
 end
 
 function _draw()
-  cls()
-  player:animate()
+  cls(3)
+  player:draw()
 end
