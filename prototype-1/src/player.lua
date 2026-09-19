@@ -2,42 +2,58 @@ player = {
   spr = 1,
   x = 0,
   y = 0,
-  speed = 1,
   facing = 'right',
   action = 'idle',
+
   init = function(self) 
     self.spr = 1
     self.x = 0
     self.y = 0
   end,
+
+  move = function(self, action, direction)
+    local speed = 1
+
+    self.action = action
+
+    if action == 'run' then
+      speed = 2
+    end
+
+    if direction == 'left' then
+      self.x -= speed
+      self.facing = direction
+    elseif direction == 'right' then
+      self.x += speed
+      self.facing = direction
+    elseif direction == 'up' then
+      self.y -= speed
+    elseif direction == 'down' then
+      self.y += speed
+    end
+  end,
+
   control = function(self)
+    local move_action = 'walk'
+
     self.action = 'idle'
 
+    if btn(5) then
+      move_action = 'run'
+    end
+
     if btn(0) then
-      self.x -= self.speed
-      self.facing = 'left'
-      self.action = 'walk'
+      self:move(move_action, 'left')
     elseif btn(1) then
-      self.x += self.speed
-      self.facing = 'right'
-      self.action = 'walk'
+      self:move(move_action, 'right')
     end
     if btn(2) then
-      self.y -= self.speed
-      self.action = 'walk'
+      self:move(move_action, 'up')
     elseif btn(3) then
-      self.y += self.speed
-      self.action = 'walk'
+      self:move(move_action, 'down')
     end
-
-    if btn(5) then
-      self.speed = 2
-      self.action = 'run'
-    else
-      self.speed = 1
-    end
-
   end,
+
   animate = function(self)
     self.spr += 0.25
     if self.action == 'walk' then
@@ -52,6 +68,7 @@ player = {
       self.spr = 1
     end
   end,
+
   draw = function(self)
     palt(0, false)
     palt(3, true)
